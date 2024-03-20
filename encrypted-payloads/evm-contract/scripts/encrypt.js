@@ -1,6 +1,5 @@
 const abi = require("../abi.js");
 const env = require("hardhat");
-
 const { ethers } = require("ethers");
 const {
   arrayify,
@@ -41,14 +40,18 @@ let encrypt_tx = async () => {
     base64_to_bytes,
   } = modules.belt;
 
+  //EVM gateway contract address
   const publicClientAddress = "0x3879E146140b627a5C858a08e507B171D9E43139";
-  const routing_contract = "secret1pfg825wflcl40dqpd3yj96zhevnlxkh35hedks";
+
+  //the contract you want to call in secret
+  const routing_contract = "secret1hsy2pj2846jnprfq9xmvdcrlukxh0lzrddtn97";
   const routing_code_hash =
-    "fc5007efb0580334be20142a3011f34101be681eaa2fe277ee429f4d76107876";
+    "6311a3f85261fc720d9a61e4ee46fae1c8a23440122b2ed1bbcebf49e3e46ad2";
   const iface = new ethers.utils.Interface(abi);
 
   const privateKey = process.env.PRIVATE_KEY;
   const provider = new ethers.providers.JsonRpcProvider(process.env.INFURA);
+
   // Create a wallet instance from a private key
   const my_wallet = new ethers.Wallet(privateKey, provider);
 
@@ -67,15 +70,14 @@ let encrypt_tx = async () => {
     ecdh(userPrivateKeyBytes, gatewayPublicKeyBytes)
   );
 
-  const key = "yo";
-  const value = "this is a test";
-  const viewing_key = "my viewing key";
+  const myAddress = "0x49e01eb08bBF0696Ed0df8cD894906f7Da635929";
+  const key = "key";
+  const value = "3.20.24";
+  const viewing_key = "viewing_key";
   const callback_gas_limit = 300000;
 
   //the function name of the function that is called on the private contract
   const handle = "store_value";
-
-  const myAddress = "0x49e01eb08bBF0696Ed0df8cD894906f7Da635929";
 
   const data = JSON.stringify({
     key: key,
@@ -86,6 +88,7 @@ let encrypt_tx = async () => {
 
   const callbackAddress = publicClientAddress.toLowerCase();
   //This is an empty callback for the sake of having a callback in the sample code.
+
   //Here, you would put your callback selector for you contract in.
   const callbackSelector = iface.getSighash(
     iface.getFunction("upgradeHandler")
@@ -172,7 +175,7 @@ let encrypt_tx = async () => {
   _payloadHash: ${_payloadHash} 
   _info: ${JSON.stringify(_info)}
   _callbackAddress: ${callbackAddress},
-  _callbackSelector: ${callbackSelector} ,
+  _callbackSelector: ${callbackSelector},
   _callbackGasLimit: ${callbackGasLimit}`);
 
   const functionData = iface.encodeFunctionData("send", [

@@ -1,12 +1,12 @@
 import { SecretNetworkClient } from "secretjs";
 
-const routing_contract = "secret1pfg825wflcl40dqpd3yj96zhevnlxkh35hedks"; //the contract you want to call in secret
+const routing_contract = "secret1hsy2pj2846jnprfq9xmvdcrlukxh0lzrddtn97"; //the contract you want to call in secret
 const routing_code_hash =
-  "fc5007efb0580334be20142a3011f34101be681eaa2fe277ee429f4d76107876"; //its codehash
+  "6311a3f85261fc720d9a61e4ee46fae1c8a23440122b2ed1bbcebf49e3e46ad2"; //its codehash
 
 let query = async () => {
-  const key = "yo";
-  const viewing_key = "my viewing key";
+  const key = "key";
+  const viewing_key = "viewing_key";
 
   const secretjs = new SecretNetworkClient({
     url: "https://lcd.testnet.secretsaturn.net",

@@ -71,9 +71,9 @@ let encrypt_tx = async () => {
   );
 
   const myAddress = "0x49e01eb08bBF0696Ed0df8cD894906f7Da635929";
-  const key = "hello";
-  const value = "i love carly";
-  const viewing_key = "test";
+  const key = "this is my encryption key";
+  const value = "secret to the moon";
+  const viewing_key = "this is my viewing key";
   const callback_gas_limit = 300000;
 
   //the function name of the function that is called on the private contract

@@ -44,7 +44,7 @@ let encrypt_tx = async () => {
   const publicClientAddress = "0x3879E146140b627a5C858a08e507B171D9E43139";
 
   //the contract you want to call in secret
-  const routing_contract = "secret1hsy2pj2846jnprfq9xmvdcrlukxh0lzrddtn97";
+  const routing_contract = "secret1z9wdcmxdad2c07m6m8l5cwvrhmwrkexp64fck0";
   const routing_code_hash =
     "6311a3f85261fc720d9a61e4ee46fae1c8a23440122b2ed1bbcebf49e3e46ad2";
   const iface = new ethers.utils.Interface(abi);
@@ -71,9 +71,9 @@ let encrypt_tx = async () => {
   );
 
   const myAddress = "0x49e01eb08bBF0696Ed0df8cD894906f7Da635929";
-  const key = "key";
-  const value = "3.20.24";
-  const viewing_key = "viewing_key";
+  const key = "hello";
+  const value = "i love carly";
+  const viewing_key = "test";
   const callback_gas_limit = 300000;
 
   //the function name of the function that is called on the private contract

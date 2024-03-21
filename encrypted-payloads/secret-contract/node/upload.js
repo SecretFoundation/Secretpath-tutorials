@@ -3,9 +3,24 @@ import * as fs from "fs";
 import dotenv from "dotenv";
 dotenv.config();
 
-const wallet = new Wallet(process.env.MNEMONIC);
+const wallet = new Wallet(
+  "desk pigeon hammer sleep only mistake stool december offer patrol once vacant"
+);
 
 const contract_wasm = fs.readFileSync("../contract.wasm.gz");
+
+const gatewayAddress = "secret10ex7r7c4y704xyu086lf74ymhrqhypayfk7fkj";
+
+const gatewayHash =
+  "012dd8efab9526dec294b6898c812ef6f6ad853e32172788f54ef3c305c1ecc5";
+
+const gatewayPublicKey =
+  "0x046d0aac3ef10e69055e934ca899f508ba516832dc74aa4ed4d741052ed5a568774d99d3bfed641a7935ae73aac8e34938db747c2f0e8b2aa95c25d069a575cc8b";
+
+const gatewayPublicKeyBytes = Buffer.from(
+  gatewayPublicKey.substring(2),
+  "hex"
+).toString("base64");
 
 const secretjs = new SecretNetworkClient({
   chainId: "pulsar-3",
@@ -53,11 +68,9 @@ let instantiate_contract = async () => {
   console.log("Instantiating contract…");
 
   let init = {
-    gateway_address: "secret10ex7r7c4y704xyu086lf74ymhrqhypayfk7fkj",
-    gateway_hash:
-      "012dd8efab9526dec294b6898c812ef6f6ad853e32172788f54ef3c305c1ecc5",
-    gateway_key:
-      "0x04173a82969fec6b375013438a650316c7c0ece9bdb0646057c34c61e25d752e6b851d56200ea3dd521f305d7dddff23ee2d40bf1d1f4bc8c592852eac9e7c8a74",
+    gateway_address: gatewayAddress,
+    gateway_hash: gatewayHash,
+    gateway_key: gatewayPublicKeyBytes,
   };
   let tx = await secretjs.tx.compute.instantiateContract(
     {

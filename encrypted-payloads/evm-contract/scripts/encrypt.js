@@ -47,8 +47,8 @@ let encrypt_tx = async () => {
   const routing_contract = "secret1z9wdcmxdad2c07m6m8l5cwvrhmwrkexp64fck0";
   const routing_code_hash =
     "6311a3f85261fc720d9a61e4ee46fae1c8a23440122b2ed1bbcebf49e3e46ad2";
-  const iface = new ethers.utils.Interface(abi);
 
+  const iface = new ethers.utils.Interface(abi);
   const privateKey = process.env.PRIVATE_KEY;
   const provider = new ethers.providers.JsonRpcProvider(process.env.INFURA);
 

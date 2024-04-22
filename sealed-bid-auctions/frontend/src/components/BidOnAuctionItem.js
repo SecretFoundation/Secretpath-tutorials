@@ -19,7 +19,7 @@ import {
   text_to_bytes,
   base64_to_bytes,
 } from "@blake.regalia/belt";
-import abi from "../abi.js";
+import abi from "../config/abi.js";
 
 const publicClientAddress = "0x3879E146140b627a5C858a08e507B171D9E43139";
 const iface = new ethers.utils.Interface(abi);

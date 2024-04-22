@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { testnet, mainnet } from "../config/secretpath";
 import React, { useState, useEffect } from "react";
 import {
   arrayify,
@@ -18,7 +19,7 @@ import {
   text_to_bytes,
   base64_to_bytes,
 } from "@blake.regalia/belt";
-import abi from "../abi.js";
+import abi from "../config/abi.js";
 
 const iface = new ethers.utils.Interface(abi);
 const routing_contract = process.env.REACT_APP_SECRET_ADDRESS;
@@ -73,15 +74,6 @@ function CreateAuctionItem() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   let get_network = async () => {
-  //     const network = (await provider.getNetwork()).chainId;
-  //     setChainId(network);
-  //     console.log(chainId);
-  //   };
-  //   get_network();
-  // }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -92,20 +84,69 @@ function CreateAuctionItem() {
       end_time: minutes,
     });
 
-    // let publicClientAddress = "0x3879E146140b627a5C858a08e507B171D9E43139";
     let publicClientAddress;
-    let publicClientAddressSepolia =
-      "0x3879E146140b627a5C858a08e507B171D9E43139";
-    let publicClientAddressScrollSepolia =
-      "0x4c14a6A0CD2DA2848D3C31285B828F6364087735";
+
+    if (chainId === "1") {
+      publicClientAddress = mainnet.publicClientAddressEthereumMainnet;
+    }
+    if (chainId === "56") {
+      publicClientAddress = mainnet.publicClientAddressBinanceSmartChainMainnet;
+    }
+    if (chainId === "137") {
+      publicClientAddress = mainnet.publicClientAddressPolygonMainnet;
+    }
+    if (chainId === "10") {
+      publicClientAddress = mainnet.publicClientAddressOptimismMainnet;
+    }
+    if (chainId === "42161") {
+      publicClientAddress = mainnet.publicClientAddressArbitrumOneMainnet;
+    }
+    if (chainId === "43114") {
+      publicClientAddress = mainnet.publicClientAddressAvalanceCChainMainnet;
+    }
+    if (chainId === "8453") {
+      publicClientAddress = mainnet.publicClientAddressBaseMainnet;
+    }
+    if (chainId === "534352") {
+      publicClientAddress = mainnet.publicClientAddressScrollMainnet;
+    }
+    if (chainId === "59144") {
+      publicClientAddress = mainnet.publicClientAddressLineaMainnet;
+    }
 
     if (chainId === "11155111") {
-      publicClientAddress = publicClientAddressSepolia;
-    } else if (chainId === "534351") {
-      publicClientAddress = publicClientAddressScrollSepolia;
+      publicClientAddress = testnet.publicClientAddressSepoliaTestnet;
+    }
+    if (chainId === "534351") {
+      publicClientAddress = testnet.publicClientAddressScrollTestnet;
+    }
+    if (chainId === "80001") {
+      publicClientAddress = testnet.publicClientAddressPolygonMumbaiTestnet;
+    }
+    if (chainId === "11155420") {
+      publicClientAddress = testnet.publicClientAddressOptimismSepoliaTestnet;
+    }
+    if (chainId === "421614") {
+      publicClientAddress = testnet.publicClientAddressArbitrumSepoliaTestnet;
+    }
+    if (chainId === "84532") {
+      publicClientAddress = testnet.publicClientAddressBaseSepoliaTestnet;
+    }
+    if (chainId === "80085") {
+      publicClientAddress = testnet.publicClientAddressBerachainTestnet;
+    }
+    if (chainId === "59901") {
+      publicClientAddress = testnet.publicClientAddressMetisSepoliaTestnet;
+    }
+    if (chainId === "1313161555") {
+      publicClientAddress = testnet.publicClientAddressNearAuroraTestnet;
+    }
+    if (chainId === "59141") {
+      publicClientAddress = testnet.publicClientAddressLineaSepoliaTestnet;
     }
 
     const callbackAddress = publicClientAddress.toLowerCase();
+    console.log("callback address: ", callbackAddress);
     console.log(data);
     console.log(callbackAddress);
 

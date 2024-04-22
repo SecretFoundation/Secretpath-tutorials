@@ -6,65 +6,7 @@ import CreateAuctionItem from "./components/CreateAuctionItem";
 import Navigation from "./components/Navigation";
 import SecretToken from "./components/SecretToken";
 import BidOnAuctionItem from "./components/BidOnAuctionItem";
-// 1. Get projectId
-const projectId = "6e58f7c259de8fd44a4b237465fe9956";
-
-// 2. Set chains
-// const mainnet = {
-//   chainId: 1,
-//   name: "Ethereum",
-//   currency: "ETH",
-//   explorerUrl: "https://etherscan.io",
-//   rpcUrl: "https://cloudflare-eth.com",
-// };
-
-// const polygon = {
-//   chainId: 137,
-//   name: "Polygon Mainnet",
-//   currency: "MATIC",
-//   explorerUrl: "https://polygonscan.com",
-//   rpcUrl: "https://polygon-rpc.com/",
-// };
-
-const sepoliaTestnet = {
-  chainId: 11155111,
-  name: "Sepolia",
-  currency: "ETH",
-  explorerUrl: "https://sepolia.etherscan.io",
-  rpcUrl: "https://rpc.sepolia.org",
-};
-
-const scrollTestnet = {
-  chainId: 534351,
-  name: "Scroll Sepolia Testnet",
-  currency: "ETH",
-  explorerUrl: "https://sepolia.scrollscan.com",
-  rpcUrl: "https://sepolia-rpc.scroll.io/",
-};
-
-const optimismTestnet = {
-  chainId: 11155420,
-  name: "Optimism",
-  currency: "ETH",
-  explorerUrl: "https://sepolia-optimistic.etherscan.io/",
-  rpcUrl: "https://sepolia.optimism.io",
-};
-
-const polygonTestnet = {
-  chainId: 80001,
-  name: "Polygon Mumbai",
-  currency: "MATIC",
-  explorerUrl: "https://mumbai.polygonscan.com",
-  rpcUrl: "https://rpc-mumbai.maticvigil.com",
-};
-
-// 3. Create a metadata object
-const metadata = {
-  name: "My Website",
-  description: "My Website description",
-  url: "https://secretpath-connect.vercel.app", // origin must match your domain & subdomain
-  icons: ["https://avatars.mywebsite.com/"],
-};
+import { projectId, testnets, mainnets, metadata } from "./config/config";
 
 // 4. Create Ethers config
 const ethersConfig = defaultConfig({
@@ -81,7 +23,27 @@ const ethersConfig = defaultConfig({
 
 createWeb3Modal({
   ethersConfig,
-  chains: [sepoliaTestnet, scrollTestnet, optimismTestnet, polygonTestnet],
+  chains: [
+    testnets.arbitrumTestnet,
+    testnets.sepoliaTestnet,
+    testnets.scrollTestnet,
+    testnets.polygonTestnet,
+    testnets.optimismTestnet,
+    testnets.baseSepoliaTestnet,
+    testnets.berachainTestnet,
+    testnets.metisSepoliaTestnet,
+    testnets.lineaSepoliaTestnet,
+    testnets.nearAuroraTestnet,
+    mainnets.ethereumMainnet,
+    mainnets.polygonMainnet,
+    mainnets.binanceSmartChainMainnet,
+    mainnets.optimismMainnet,
+    mainnets.arbitrumMainnet,
+    mainnets.avalancheMainnet,
+    mainnets.baseMainnet,
+    mainnets.scrollMainnet,
+    mainnets.lineaMainnet,
+  ],
   projectId,
   enableAnalytics: true, // Optional - defaults to your Cloud configuration
 });

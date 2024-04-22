@@ -48,6 +48,7 @@ export default function BidOnAuctionItem() {
   const [items, setItems] = useState([]);
   const [bids, setBids] = useState({});
   const [chainId, setChainId] = useState("");
+  const [bidValues, setBidValues] = useState({});
 
   useEffect(() => {
     const handleChainChanged = (_chainId) => {
@@ -87,6 +88,7 @@ export default function BidOnAuctionItem() {
 
   const handleBidChange = (itemKey, value) => {
     setBids((prev) => ({ ...prev, [itemKey]: value }));
+    setBidValues((prev) => ({ ...prev, [itemKey]: value }));
   };
 
   const handleSubmit = async (e, itemKey, amount, index) => {
@@ -319,48 +321,40 @@ export default function BidOnAuctionItem() {
     return bids;
   };
 
-  let query = async () => {
-    const secretjs = new SecretNetworkClient({
-      url: "https://lcd.testnet.secretsaturn.net",
-      chainId: "pulsar-3",
-    });
-
-    const query_tx = await secretjs.query.compute.queryContract({
-      contract_address: process.env.REACT_APP_SECRET_ADDRESS,
-      code_hash: process.env.REACT_APP_CODE_HASH,
-      query: { retrieve_bids: { key: 7 } },
-    });
-    console.log(query_tx);
-  };
-
-  query();
-
   return (
     <div className="sm:mx-auto sm:w-full sm:max-w-md text-white">
-      <h1 className="text-xl font-bold">Auction Items</h1>
-      {items.map((item) => (
-        <form
-          key={item.key}
-          onSubmit={(e) => handleSubmit(e, item.key)}
-          className="border-4 rounded-lg p-4 m-4"
-        >
-          <h3 className="text-2xl font-semibold">{item.name}</h3>
-          <p className="text-base italic">{item.description}</p>
-          <input
-            type="text"
-            value={bids[item.key] || ""}
-            onChange={(e) => handleBidChange(item.key, e.target.value)}
-            placeholder="Enter your bid"
-            className="text-black"
-          />
-          <button
-            type="submit"
-            className="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      <h1 className="text-xl font-bold ml-6">Auction Items</h1>
+
+      {[...items].reverse().map(
+        (
+          item,
+          index // Reverse the copy of items for rendering
+        ) => (
+          <form
+            key={item.key}
+            onSubmit={(e) => handleSubmit(e, item.key)}
+            className="border-4 rounded-lg p-4 m-4"
           >
-            Bid
-          </button>
-        </form>
-      ))}
+            <h3 className="text-2xl font-semibold">{item.name}</h3>
+            <p className="text-base italic">{item.description}</p>
+            <p>{bids[items.length - 1 - index]}</p>{" "}
+            {/* Adjust index for bids */}
+            <input
+              type="text"
+              value={bidValues[item.key] || ""}
+              onChange={(e) => handleBidChange(item.key, e.target.value)}
+              placeholder="Enter your bid"
+              className="text-black"
+            />
+            <button
+              type="submit"
+              className="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Bid
+            </button>
+          </form>
+        )
+      )}
     </div>
   );
 }

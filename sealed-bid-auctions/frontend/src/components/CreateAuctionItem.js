@@ -221,7 +221,7 @@ function CreateAuctionItem() {
   };
 
   return (
-    <div className="sm:mx-auto sm:w-full sm:max-w-md">
+    <div className="sm:mx-auto sm:w-full sm:max-w-md mb-20">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="text-white">Create Auction Item</div>
         <div className="border-4 rounded-lg p-4">

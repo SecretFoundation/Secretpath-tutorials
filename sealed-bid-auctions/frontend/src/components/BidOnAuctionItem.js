@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { testnet, mainnet } from "../config/secretpath";
 import { SecretNetworkClient } from "secretjs";
 import React, { useState, useEffect } from "react";
 import {
@@ -21,12 +22,12 @@ import {
 } from "@blake.regalia/belt";
 import abi from "../config/abi.js";
 
-const publicClientAddress = "0x3879E146140b627a5C858a08e507B171D9E43139";
 const iface = new ethers.utils.Interface(abi);
 const routing_contract = process.env.REACT_APP_SECRET_ADDRESS;
 const routing_code_hash = process.env.REACT_APP_CODE_HASH;
 
-const provider = new ethers.providers.Web3Provider(window.ethereum);
+const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+
 const [myAddress] = await provider.send("eth_requestAccounts", []);
 
 const wallet = ethers.Wallet.createRandom();
@@ -39,104 +40,138 @@ const gatewayPublicKeyBytes = base64_to_bytes(gatewayPublicKey);
 const sharedKey = await sha256(
   ecdh(userPrivateKeyBytes, gatewayPublicKeyBytes)
 );
-const callbackAddress = publicClientAddress.toLowerCase();
+
 const callbackSelector = iface.getSighash(iface.getFunction("upgradeHandler"));
 const callbackGasLimit = 300000;
 
 export default function BidOnAuctionItem() {
   const [items, setItems] = useState([]);
   const [bids, setBids] = useState({});
-  const [queriedBids, setQueriedBids] = useState({});
-
-  const handleBidChange = (index, value) => {
-    setBids({ ...bids, [index]: value });
-  };
-
-  const queryAuctionItem = async (key) => {
-    const secretjs = new SecretNetworkClient({
-      url: "https://lcd.testnet.secretsaturn.net",
-      chainId: "pulsar-3",
-    });
-
-    try {
-      const query_tx = await secretjs.query.compute.queryContract({
-        contract_address: process.env.REACT_APP_SECRET_ADDRESS,
-        code_hash: process.env.REACT_APP_CODE_HASH,
-        query: { retrieve_auction_item: { key } },
-      });
-
-      // Directly return the response assuming it needs to be filtered later
-      return query_tx;
-    } catch (error) {
-      console.error(`Failed to fetch item with key ${key}:`, error);
-      return "Error: Fetching item failed"; // Return a string to indicate error
-    }
-  };
-
-  // New function to query bids
-  const queryBids = async (key) => {
-    const secretjs = new SecretNetworkClient({
-      url: "https://lcd.testnet.secretsaturn.net",
-      chainId: "pulsar-3",
-    });
-    try {
-      const query_tx = await secretjs.query.compute.queryContract({
-        contract_address: process.env.REACT_APP_SECRET_ADDRESS,
-        code_hash: process.env.REACT_APP_CODE_HASH,
-        query: { retrieve_bids: { key } },
-      });
-
-      // Extracting the message from the query response
-      return query_tx.message || "No bids information available";
-    } catch (error) {
-      console.error(`Failed to query bids for item with key ${key}:`, error);
-      return "Error: Fetching bids failed";
-    }
-  };
+  const [chainId, setChainId] = useState("");
 
   useEffect(() => {
-    const fetchItems = async () => {
-      const keys = Array.from({ length: 20 }, (_, i) => i + 1); // Example for 10 items
-      const promises = keys.map((key) => queryAuctionItem(key));
-
-      const results = await Promise.all(promises);
-
-      // Filter out string responses, indicating errors
-      const validItems = results.filter((item) => typeof item !== "string");
-
-      setItems(validItems);
+    const handleChainChanged = (_chainId) => {
+      // Convert _chainId to a number since it's usually hexadecimal
+      const numericChainId = parseInt(_chainId, 16);
+      setChainId(numericChainId.toString());
+      console.log("Network changed to chain ID:", numericChainId);
     };
 
-    fetchItems();
+    window.ethereum.on("chainChanged", handleChainChanged);
 
-    // Also fetch bids for items
-    const fetchBids = async () => {
-      const keys = Array.from({ length: 10 }, (_, i) => i + 1); // Example for 10 items
-      const bidPromises = keys.map((key) => queryBids(key));
-      const bidResults = await Promise.all(bidPromises);
-
-      // Create a map of item index to bid messages
-      const bidsMap = bidResults.reduce((acc, message, index) => {
-        acc[index] = message; // Map item index to the bid message
-        return acc;
-      }, {});
-
-      setQueriedBids(bidsMap);
+    // Fetch initial chain ID
+    const fetchChainId = async () => {
+      const { chainId } = await provider.getNetwork();
+      setChainId(chainId.toString());
+      console.log("Current Chain ID:", chainId);
     };
-    fetchBids();
+
+    fetchChainId();
+
+    // Cleanup function to remove listener
+    return () => {
+      window.ethereum.removeListener("chainChanged", handleChainChanged);
+    };
   }, []);
 
-  const submitBid = async (index, bidValue) => {
-    const adjustedIndex = index + 1;
+  useEffect(() => {
+    const fetchItemsAndBids = async () => {
+      const fetchedItems = await queryAllAuctionItems(); // Fetch all auction items first
+      setItems(fetchedItems);
+      const fetchedBids = await queryBidsForItems(fetchedItems); // Fetch bids based on the fetched items
+      setBids(fetchedBids);
+    };
 
+    fetchItemsAndBids();
+  }, []);
+
+  const handleBidChange = (itemKey, value) => {
+    setBids((prev) => ({ ...prev, [itemKey]: value }));
+  };
+
+  const handleSubmit = async (e, itemKey, amount, index) => {
+    e.preventDefault();
+    const bidAmount = bids[itemKey];
+
+    console.log(
+      `Submitting bid of ${bidAmount} for item ${
+        items.find((x) => x.key === itemKey).name
+      }`
+    );
+
+    // let updatedIndex = itemKey - 1;
     // Create the data object from form state
     const data = JSON.stringify({
-      amount: bidValue,
+      amount: bidAmount,
       bidder_address: myAddress,
-      index: adjustedIndex.toString(),
+      index: itemKey.toString(),
     });
 
+    let publicClientAddress;
+
+    if (chainId === "1") {
+      publicClientAddress = mainnet.publicClientAddressEthereumMainnet;
+    }
+    if (chainId === "56") {
+      publicClientAddress = mainnet.publicClientAddressBinanceSmartChainMainnet;
+    }
+    if (chainId === "137") {
+      publicClientAddress = mainnet.publicClientAddressPolygonMainnet;
+    }
+    if (chainId === "10") {
+      publicClientAddress = mainnet.publicClientAddressOptimismMainnet;
+    }
+    if (chainId === "42161") {
+      publicClientAddress = mainnet.publicClientAddressArbitrumOneMainnet;
+    }
+    if (chainId === "43114") {
+      publicClientAddress = mainnet.publicClientAddressAvalanceCChainMainnet;
+    }
+    if (chainId === "8453") {
+      publicClientAddress = mainnet.publicClientAddressBaseMainnet;
+    }
+    if (chainId === "534352") {
+      publicClientAddress = mainnet.publicClientAddressScrollMainnet;
+    }
+    if (chainId === "59144") {
+      publicClientAddress = mainnet.publicClientAddressLineaMainnet;
+    }
+
+    if (chainId === "11155111") {
+      publicClientAddress = testnet.publicClientAddressSepoliaTestnet;
+    }
+    if (chainId === "534351") {
+      publicClientAddress = testnet.publicClientAddressScrollTestnet;
+    }
+    if (chainId === "80001") {
+      publicClientAddress = testnet.publicClientAddressPolygonMumbaiTestnet;
+    }
+    if (chainId === "11155420") {
+      publicClientAddress = testnet.publicClientAddressOptimismSepoliaTestnet;
+    }
+    if (chainId === "421614") {
+      publicClientAddress = testnet.publicClientAddressArbitrumSepoliaTestnet;
+    }
+    if (chainId === "84532") {
+      publicClientAddress = testnet.publicClientAddressBaseSepoliaTestnet;
+    }
+    if (chainId === "80085") {
+      publicClientAddress = testnet.publicClientAddressBerachainTestnet;
+    }
+    if (chainId === "59901") {
+      publicClientAddress = testnet.publicClientAddressMetisSepoliaTestnet;
+    }
+    if (chainId === "1313161555") {
+      publicClientAddress = testnet.publicClientAddressNearAuroraTestnet;
+    }
+    if (chainId === "59141") {
+      publicClientAddress = testnet.publicClientAddressLineaSepoliaTestnet;
+    }
+
+    const callbackAddress = publicClientAddress.toLowerCase();
+    console.log("callback address: ", callbackAddress);
     console.log(data);
+    console.log(callbackAddress);
 
     // Payload construction
     const payload = {
@@ -208,29 +243,123 @@ export default function BidOnAuctionItem() {
     console.log(`Transaction Hash: ${txHash}`);
   };
 
+  useEffect(() => {
+    const fetchItemsAndBids = async () => {
+      const fetchedItems = await queryAllAuctionItems(); // Fetch all auction items first
+      setItems(fetchedItems);
+      const fetchedBids = await queryBidsForItems(fetchedItems); // Fetch bids based on the fetched items
+      setBids(fetchedBids);
+    };
+
+    fetchItemsAndBids();
+  }, []);
+
+  const queryAllAuctionItems = async () => {
+    const secretjs = new SecretNetworkClient({
+      url: "https://lcd.testnet.secretsaturn.net",
+      chainId: "pulsar-3",
+    });
+
+    let items = [];
+    let key = 1;
+    let continueFetching = true;
+
+    while (continueFetching) {
+      try {
+        const response = await secretjs.query.compute.queryContract({
+          contract_address: process.env.REACT_APP_SECRET_ADDRESS,
+          code_hash: process.env.REACT_APP_CODE_HASH,
+          query: { retrieve_auction_item: { key } },
+        });
+
+        if (response && response !== "Generic error: Value not found") {
+          items.push({ key, ...response });
+          key++;
+        } else {
+          continueFetching = false;
+        }
+      } catch (error) {
+        console.error(`Failed to fetch item with key ${key}:`, error);
+        continueFetching = false;
+      }
+    }
+
+    return items;
+  };
+
+  const queryBidsForItems = async (items) => {
+    const secretjs = new SecretNetworkClient({
+      url: "https://lcd.testnet.secretsaturn.net",
+      chainId: "pulsar-3",
+    });
+
+    let bids = [];
+    for (let item of items) {
+      try {
+        const query_tx = await secretjs.query.compute.queryContract({
+          contract_address: process.env.REACT_APP_SECRET_ADDRESS,
+          code_hash: process.env.REACT_APP_CODE_HASH,
+          query: { retrieve_bids: { key: item.key } },
+        });
+
+        if (query_tx && query_tx.message) {
+          bids.push(query_tx.message);
+        } else {
+          bids.push("No bids available for this item");
+        }
+      } catch (error) {
+        console.error(
+          `Failed to query bids for item with key ${item.key}:`,
+          error
+        );
+        bids.push("Error fetching bids");
+      }
+    }
+    console.log(bids);
+    return bids;
+  };
+
+  let query = async () => {
+    const secretjs = new SecretNetworkClient({
+      url: "https://lcd.testnet.secretsaturn.net",
+      chainId: "pulsar-3",
+    });
+
+    const query_tx = await secretjs.query.compute.queryContract({
+      contract_address: process.env.REACT_APP_SECRET_ADDRESS,
+      code_hash: process.env.REACT_APP_CODE_HASH,
+      query: { retrieve_bids: { key: 7 } },
+    });
+    console.log(query_tx);
+  };
+
+  query();
+
   return (
     <div className="sm:mx-auto sm:w-full sm:max-w-md text-white">
-      {items.map((item, index) => (
-        <div className="border-4 rounded-lg p-4 m-4" key={index}>
+      <h1 className="text-xl font-bold">Auction Items</h1>
+      {items.map((item) => (
+        <form
+          key={item.key}
+          onSubmit={(e) => handleSubmit(e, item.key)}
+          className="border-4 rounded-lg p-4 m-4"
+        >
           <h3 className="text-2xl font-semibold">{item.name}</h3>
           <p className="text-base italic">{item.description}</p>
-          {/* Displaying the bid message */}
-          <p className="text-base">{queriedBids[index]}</p>
-
           <input
-            type="string"
-            value={bids[index] || ""}
-            onChange={(e) => handleBidChange(index, e.target.value)}
-            className="text-black"
+            type="text"
+            value={bids[item.key] || ""}
+            onChange={(e) => handleBidChange(item.key, e.target.value)}
             placeholder="Enter your bid"
+            className="text-black"
           />
           <button
-            onClick={() => submitBid(index, bids[index])}
-            className="mt-4 ml-2 justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            type="submit"
+            className="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Place Bid
+            Bid
           </button>
-        </div>
+        </form>
       ))}
     </div>
   );

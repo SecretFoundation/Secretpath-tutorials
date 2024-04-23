@@ -8,7 +8,6 @@ import SecretToken from "./components/SecretToken";
 import BidOnAuctionItem from "./components/BidOnAuctionItem";
 import { projectId, testnets, mainnets, metadata } from "./config/config";
 
-// 4. Create Ethers config
 const ethersConfig = defaultConfig({
   /*Required*/
   metadata,
@@ -56,11 +55,11 @@ function App() {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <SecretToken />
           <Router>
-            <Navigation /> {/* Navigation included here */}
+            <Navigation />
+
             <Routes>
               <Route path="/create" element={<CreateAuctionItem />} />
               <Route path="/bid" element={<BidOnAuctionItem />} />
-              {/* Define other routes as needed */}
             </Routes>
           </Router>
         </div>

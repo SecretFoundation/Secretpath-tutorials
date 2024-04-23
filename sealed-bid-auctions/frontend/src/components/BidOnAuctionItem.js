@@ -22,29 +22,7 @@ import {
 } from "@blake.regalia/belt";
 import abi from "../config/abi.js";
 
-const iface = new ethers.utils.Interface(abi);
-const routing_contract = process.env.REACT_APP_SECRET_ADDRESS;
-const routing_code_hash = process.env.REACT_APP_CODE_HASH;
-
-const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-
-const [myAddress] = await provider.send("eth_requestAccounts", []);
-
-const wallet = ethers.Wallet.createRandom();
-const userPrivateKeyBytes = arrayify(wallet.privateKey);
-const userPublicKey = new SigningKey(wallet.privateKey).compressedPublicKey;
-const userPublicKeyBytes = arrayify(userPublicKey);
-const gatewayPublicKey = "A20KrD7xDmkFXpNMqJn1CLpRaDLcdKpO1NdBBS7VpWh3";
-const gatewayPublicKeyBytes = base64_to_bytes(gatewayPublicKey);
-
-const sharedKey = await sha256(
-  ecdh(userPrivateKeyBytes, gatewayPublicKeyBytes)
-);
-
-const callbackSelector = iface.getSighash(iface.getFunction("upgradeHandler"));
-const callbackGasLimit = 300000;
-
-export default function BidOnAuctionItem() {
+export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
   const [items, setItems] = useState([]);
   const [bids, setBids] = useState({});
   const [chainId, setChainId] = useState("");
@@ -62,6 +40,10 @@ export default function BidOnAuctionItem() {
 
     // Fetch initial chain ID
     const fetchChainId = async () => {
+      const provider = new ethers.providers.Web3Provider(
+        window.ethereum,
+        "any"
+      );
       const { chainId } = await provider.getNetwork();
       setChainId(chainId.toString());
       console.log("Current Chain ID:", chainId);
@@ -93,6 +75,31 @@ export default function BidOnAuctionItem() {
 
   const handleSubmit = async (e, itemKey, amount, index) => {
     e.preventDefault();
+
+    const iface = new ethers.utils.Interface(abi);
+    const routing_contract = process.env.REACT_APP_SECRET_ADDRESS;
+    const routing_code_hash = process.env.REACT_APP_CODE_HASH;
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+
+    const [myAddress] = await provider.send("eth_requestAccounts", []);
+
+    const wallet = ethers.Wallet.createRandom();
+    const userPrivateKeyBytes = arrayify(wallet.privateKey);
+    const userPublicKey = new SigningKey(wallet.privateKey).compressedPublicKey;
+    const userPublicKeyBytes = arrayify(userPublicKey);
+    const gatewayPublicKey = "A20KrD7xDmkFXpNMqJn1CLpRaDLcdKpO1NdBBS7VpWh3";
+    const gatewayPublicKeyBytes = base64_to_bytes(gatewayPublicKey);
+
+    const sharedKey = await sha256(
+      ecdh(userPrivateKeyBytes, gatewayPublicKeyBytes)
+    );
+
+    const callbackSelector = iface.getSighash(
+      iface.getFunction("upgradeHandler")
+    );
+    const callbackGasLimit = 300000;
+
     const bidAmount = bids[itemKey];
 
     console.log(

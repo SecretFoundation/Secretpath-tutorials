@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { testnet, mainnet } from "../config/secretpath";
 import { SecretNetworkClient } from "secretjs";
+import ClipLoader from "react-spinners/ClipLoader";
 import React, { useState, useEffect } from "react";
 import {
   arrayify,
@@ -27,6 +28,7 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
   const [bids, setBids] = useState({});
   const [chainId, setChainId] = useState("");
   const [bidValues, setBidValues] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleChainChanged = (_chainId) => {
@@ -258,6 +260,7 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
       setItems(fetchedItems);
       const fetchedBids = await queryBidsForItems(fetchedItems); // Fetch bids based on the fetched items
       setBids(fetchedBids);
+      setLoading(false);
     };
 
     fetchItemsAndBids();
@@ -328,6 +331,17 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
     return bids;
   };
 
+  if (loading) {
+    return (
+      <ClipLoader
+        color="#ffffff"
+        loading={loading}
+        size={150}
+        className="flex justify-center items-center h-screen ml-20"
+      />
+    );
+  }
+
   return (
     <div className="sm:mx-auto sm:w-full sm:max-w-md text-white">
       <h1 className="text-xl font-bold ml-6">Auction Items</h1>
@@ -344,21 +358,26 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
           >
             <h3 className="text-2xl font-semibold">{item.name}</h3>
             <p className="text-base italic">{item.description}</p>
-            <p>{bids[items.length - 1 - index]}</p>{" "}
-            {/* Adjust index for bids */}
-            <input
-              type="text"
-              value={bidValues[item.key] || ""}
-              onChange={(e) => handleBidChange(item.key, e.target.value)}
-              placeholder="Enter your bid"
-              className="text-black"
-            />
-            <button
-              type="submit"
-              className="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Bid
-            </button>
+            <p>{bids[items.length - 1 - index]}</p>
+            {bids[items.length - 1 - index].includes(
+              "Bidding is closed"
+            ) ? null : (
+              <>
+                <input
+                  type="text"
+                  value={bidValues[item.key] || ""}
+                  onChange={(e) => handleBidChange(item.key, e.target.value)}
+                  placeholder="Enter your bid"
+                  className="text-black"
+                />
+                <button
+                  type="submit"
+                  className="mt-4 max-w-[400px] flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Bid
+                </button>
+              </>
+            )}
           </form>
         )
       )}

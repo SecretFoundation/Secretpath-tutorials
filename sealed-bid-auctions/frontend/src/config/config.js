@@ -19,13 +19,13 @@ export const testnets = {
     explorerUrl: "https://sepolia.scrollscan.com",
     rpcUrl: "https://sepolia-rpc.scroll.io/",
   },
-  polygonTestnet: {
-    chainId: 80001,
-    name: "Matic Mumbai",
-    currency: "MATIC",
-    explorerUrl: "https://mumbai.polygonscan.com",
-    rpcUrl: "https://rpc-mumbai.maticvigil.com/",
-  },
+  // polygonTestnet: {
+  //   chainId: 80001,
+  //   name: "Matic Mumbai",
+  //   currency: "MATIC",
+  //   explorerUrl: "https://mumbai.polygonscan.com",
+  //   rpcUrl: "https://rpc-mumbai.maticvigil.com/",
+  // },
   optimismTestnet: {
     chainId: 11155420,
     name: "Optimism Sepolia",

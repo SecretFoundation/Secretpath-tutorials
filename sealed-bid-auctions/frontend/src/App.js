@@ -26,7 +26,7 @@ createWeb3Modal({
     testnets.arbitrumTestnet,
     testnets.sepoliaTestnet,
     testnets.scrollTestnet,
-    testnets.polygonTestnet,
+
     testnets.optimismTestnet,
     testnets.baseSepoliaTestnet,
     testnets.berachainTestnet,

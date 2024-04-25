@@ -127,9 +127,9 @@ function CreateAuctionItem() {
     if (chainId === "534351") {
       publicClientAddress = testnet.publicClientAddressScrollTestnet;
     }
-    if (chainId === "80001") {
-      publicClientAddress = testnet.publicClientAddressPolygonMumbaiTestnet;
-    }
+    // if (chainId === "80001") {
+    //   publicClientAddress = testnet.publicClientAddressPolygonMumbaiTestnet;
+    // }
     if (chainId === "11155420") {
       publicClientAddress = testnet.publicClientAddressOptimismSepoliaTestnet;
     }

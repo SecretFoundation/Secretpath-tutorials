@@ -7,7 +7,7 @@ import Navigation from "./components/Navigation";
 import SecretToken from "./components/SecretToken";
 import BidOnAuctionItem from "./components/BidOnAuctionItem";
 import { projectId, testnets, mainnets, metadata } from "./config/config";
-
+import MyImage from "./poweredby.png";
 const ethersConfig = defaultConfig({
   /*Required*/
   metadata,
@@ -53,6 +53,9 @@ function App() {
       <w3m-button />
       <div className="flex min-h-full flex-1 flex-col justify-center px-6  lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+          <div className="text-white text-xl font-bold mb-10 ml-16">
+            EVM Sealed-bid Auctions
+          </div>
           <Router>
             <Navigation />
 
@@ -61,6 +64,11 @@ function App() {
               <Route path="/bid" element={<BidOnAuctionItem />} />
             </Routes>
           </Router>
+          <img
+            src={MyImage}
+            alt="Descriptive Text"
+            className=" w-18 h-12 rounded-lg shadow-lg mt-8 ml-36"
+          />
         </div>
       </div>
     </>

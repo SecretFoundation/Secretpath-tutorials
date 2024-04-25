@@ -29,6 +29,7 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
   const [chainId, setChainId] = useState("");
   const [bidValues, setBidValues] = useState({});
   const [loading, setLoading] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const handleChainChanged = (_chainId) => {
@@ -250,8 +251,18 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
       data: functionData,
     };
 
-    const txHash = await provider.send("eth_sendTransaction", [tx_params]);
-    console.log(`Transaction Hash: ${txHash}`);
+    try {
+      const txHash = await provider.send("eth_sendTransaction", [tx_params]);
+      console.log(`Transaction Hash: ${txHash}`);
+
+      setIsModalVisible(true); // Show the modal on success
+    } catch (error) {
+      console.error("Error submitting transaction:", error);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false); // Function to close modal
   };
 
   useEffect(() => {
@@ -337,7 +348,7 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
         color="#ffffff"
         loading={loading}
         size={150}
-        className="flex justify-center items-center h-screen ml-20"
+        className="flex justify-center items-center h-screen ml-32"
       />
     );
   }
@@ -380,6 +391,20 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
             )}
           </form>
         )
+      )}
+      {isModalVisible && (
+        <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="p-4 rounded">
+            <h2 className="text-lg">Bid Created Successfully!</h2>
+
+            <button
+              onClick={() => handleCloseModal()}
+              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-blue-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

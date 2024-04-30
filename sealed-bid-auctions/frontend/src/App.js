@@ -31,6 +31,7 @@ createWeb3Modal({
     59144: "https://lineascan.build/images/svg/brands/main.svg?v=24.4.2.0",
     59141: "https://lineascan.build/images/svg/brands/main.svg?v=24.4.2.0",
     42161: "https://arbiscan.io/images/svg/brands/arbitrum.svg?v=1.5",
+    421614: "https://arbiscan.io/images/svg/brands/arbitrum.svg?v=1.5",
     80085:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq-tjg8Kqgr76Ved6PbcjBoGCHWwnhDUljH-CziyBOzw&s",
     11155420:
@@ -38,6 +39,7 @@ createWeb3Modal({
     84532: "https://basescan.org/images/svg/brands/main.svg?v=24.4.4.9",
     80002:
       "https://assets-global.website-files.com/637e2b6d602973ea0941d482/63e26c8a3f6e812d91a7aa3d_Polygon-New-Logo.png",
+    1313161555: "https://explorer.aurora.dev/assets/network_icon.svg",
   },
   ethersConfig,
   chains: [
@@ -60,6 +62,7 @@ createWeb3Modal({
     testnets.metisSepoliaTestnet,
     testnets.lineaSepoliaTestnet,
     testnets.nearAuroraTestnet,
+    testnets.etherlinkTestnet,
   ],
   projectId,
   enableAnalytics: true, // Optional - defaults to your Cloud configuration

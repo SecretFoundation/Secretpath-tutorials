@@ -127,9 +127,9 @@ function CreateAuctionItem() {
     if (chainId === "534351") {
       publicClientAddress = testnet.publicClientAddressScrollTestnet;
     }
-    // if (chainId === "80001") {
-    //   publicClientAddress = testnet.publicClientAddressPolygonMumbaiTestnet;
-    // }
+    if (chainId === "80002") {
+      publicClientAddress = testnet.publicClientAddressPolygonAmoyTestnet;
+    }
     if (chainId === "11155420") {
       publicClientAddress = testnet.publicClientAddressOptimismSepoliaTestnet;
     }
@@ -139,8 +139,8 @@ function CreateAuctionItem() {
     if (chainId === "84532") {
       publicClientAddress = testnet.publicClientAddressBaseSepoliaTestnet;
     }
-    if (chainId === "80085") {
-      publicClientAddress = testnet.publicClientAddressBerachainTestnet;
+    if (chainId === "59902") {
+      publicClientAddress = testnet.publicClientAddressMetisSepoliaTestnet;
     }
     if (chainId === "59901") {
       publicClientAddress = testnet.publicClientAddressMetisSepoliaTestnet;
@@ -150,6 +150,9 @@ function CreateAuctionItem() {
     }
     if (chainId === "59141") {
       publicClientAddress = testnet.publicClientAddressLineaSepoliaTestnet;
+    }
+    if (chainId === "128123") {
+      publicClientAddress = testnet.publicClientAddressEtherlinkTestnet;
     }
 
     const callbackAddress = publicClientAddress.toLowerCase();

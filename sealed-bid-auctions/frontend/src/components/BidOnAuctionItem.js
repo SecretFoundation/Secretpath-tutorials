@@ -180,6 +180,10 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
       publicClientAddress = testnet.publicClientAddressLineaSepoliaTestnet;
     }
 
+    if (chainId === "128123") {
+      publicClientAddress = testnet.publicClientAddressEtherlinkTestnet;
+    }
+
     const callbackAddress = publicClientAddress.toLowerCase();
     console.log("callback address: ", callbackAddress);
     console.log(data);

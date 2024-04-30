@@ -54,6 +54,13 @@ export const testnets = {
     explorerUrl: "https://artio.beratrail.io/",
     rpcUrl: "https://artio.rpc.berachain.com/",
   },
+  etherlinkTestnet: {
+    chainId: 128123,
+    name: "Etherlink Testnet",
+    currency: "XTZ",
+
+    rpcUrl: "https://node.ghostnet.etherlink.com/",
+  },
   metisSepoliaTestnet: {
     chainId: 59902,
     name: "Metis Sepolia Testnet",

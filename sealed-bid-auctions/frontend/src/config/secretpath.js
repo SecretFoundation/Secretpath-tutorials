@@ -38,4 +38,6 @@ export const testnet = {
     "0x6f1A599A902982dcD9a632b15D21628cb17f5Cd2",
   publicClientAddressLineaSepoliaTestnet:
     "0x8EaAB5e8551781F3E8eb745E7fcc7DAeEFd27b1f",
+  publicClientAddressEtherlinkTestnet:
+    "0x4c14a6A0CD2DA2848D3C31285B828F6364087735",
 };

@@ -58,7 +58,7 @@ export const testnets = {
     chainId: 128123,
     name: "Etherlink Testnet",
     currency: "XTZ",
-
+    explorerUrl: "https://testnet-explorer.etherlink.com/",
     rpcUrl: "https://node.ghostnet.etherlink.com/",
   },
   metisSepoliaTestnet: {

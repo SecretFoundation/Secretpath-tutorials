@@ -39,7 +39,9 @@ createWeb3Modal({
     84532: "https://basescan.org/images/svg/brands/main.svg?v=24.4.4.9",
     80002:
       "https://assets-global.website-files.com/637e2b6d602973ea0941d482/63e26c8a3f6e812d91a7aa3d_Polygon-New-Logo.png",
-    1313161555: "https://explorer.aurora.dev/assets/network_icon.svg",
+    1313161555:
+      "https://play-lh.googleusercontent.com/0zJGaaodqDL--ig2W2h60zp5uLMexQs4_PRlon5qhakSwqsdwa_ZmV9DQKvg1WVnn-w=w240-h480-rw",
+    128123: "https://www.etherlink.com/favicon.ico",
   },
   ethersConfig,
   chains: [

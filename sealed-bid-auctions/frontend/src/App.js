@@ -26,6 +26,18 @@ createWeb3Modal({
     59902: "https://cms-cdn.avascan.com/cms2/metis.97de56bab032.svg",
     11155111:
       "https://sepolia.etherscan.io/images/svg/brands/ethereum-original.svg",
+    534352: "https://scrollscan.com/images/svg/brands/main.svg?v=24.4.3.0",
+    534351: "https://scrollscan.com/images/svg/brands/main.svg?v=24.4.3.0",
+    59144: "https://lineascan.build/images/svg/brands/main.svg?v=24.4.2.0",
+    59141: "https://lineascan.build/images/svg/brands/main.svg?v=24.4.2.0",
+    42161: "https://arbiscan.io/images/svg/brands/arbitrum.svg?v=1.5",
+    80085:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq-tjg8Kqgr76Ved6PbcjBoGCHWwnhDUljH-CziyBOzw&s",
+    11155420:
+      "https://optimistic.etherscan.io/assets/optimism/images/svg/logos/chain-light.svg?v=24.4.4.4",
+    84532: "https://basescan.org/images/svg/brands/main.svg?v=24.4.4.9",
+    80002:
+      "https://assets-global.website-files.com/637e2b6d602973ea0941d482/63e26c8a3f6e812d91a7aa3d_Polygon-New-Logo.png",
   },
   ethersConfig,
   chains: [

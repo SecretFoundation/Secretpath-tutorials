@@ -110,7 +110,7 @@ export const mainnets = {
   arbitrumMainnet: {
     chainId: 42161,
     name: "Arbitrum One",
-    currency: "MATIC",
+    currency: "ETH",
     explorerUrl: "https://explorer.arbitrum.io",
     rpcUrl: "https://arbitrum-mainnet.infura.io",
   },

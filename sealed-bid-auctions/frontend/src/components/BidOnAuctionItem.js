@@ -155,9 +155,9 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
     if (chainId === "534351") {
       publicClientAddress = testnet.publicClientAddressScrollTestnet;
     }
-    // if (chainId === "80001") {
-    //   publicClientAddress = testnet.publicClientAddressPolygonMumbaiTestnet;
-    // }
+    if (chainId === "80002") {
+      publicClientAddress = testnet.publicClientAddressPolygonAmoyTestnet;
+    }
     if (chainId === "11155420") {
       publicClientAddress = testnet.publicClientAddressOptimismSepoliaTestnet;
     }
@@ -170,7 +170,7 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
     if (chainId === "80085") {
       publicClientAddress = testnet.publicClientAddressBerachainTestnet;
     }
-    if (chainId === "59901") {
+    if (chainId === "59902") {
       publicClientAddress = testnet.publicClientAddressMetisSepoliaTestnet;
     }
     if (chainId === "1313161555") {

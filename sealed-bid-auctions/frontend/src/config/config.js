@@ -19,13 +19,13 @@ export const testnets = {
     explorerUrl: "https://sepolia.scrollscan.com",
     rpcUrl: "https://sepolia-rpc.scroll.io/",
   },
-  // polygonTestnet: {
-  //   chainId: 80001,
-  //   name: "Matic Mumbai",
-  //   currency: "MATIC",
-  //   explorerUrl: "https://mumbai.polygonscan.com",
-  //   rpcUrl: "https://rpc-mumbai.maticvigil.com/",
-  // },
+  polygonTestnet: {
+    chainId: 80002,
+    name: "Polygon Amoy Testnet",
+    currency: "MATIC",
+    explorerUrl: "https://amoy.polygonscan.com/",
+    rpcUrl: "https://rpc-amoy.polygon.technology/",
+  },
   optimismTestnet: {
     chainId: 11155420,
     name: "Optimism Sepolia",
@@ -55,11 +55,11 @@ export const testnets = {
     rpcUrl: "https://artio.rpc.berachain.com/",
   },
   metisSepoliaTestnet: {
-    chainId: 59901,
-    name: "Metis Sepolia",
-    currency: "Metis",
-    explorerUrl: "https://artio.beratrail.io/",
-    rpcUrl: "https://sepolia.rpc.metisdevops.link/",
+    chainId: 59902,
+    name: "Metis Sepolia Testnet",
+    currency: "sMETIS",
+    explorerUrl: "https://sepolia-explorer.metisdevops.link",
+    rpcUrl: "https://sepolia.metisdevops.link",
   },
   nearAuroraTestnet: {
     chainId: 1313161555,
@@ -141,6 +141,13 @@ export const mainnets = {
     currency: "ETH",
     explorerUrl: "https://scrollscan.com",
     rpcUrl: "https://rpc.scroll.io",
+  },
+  metisMainnet: {
+    chainId: 1088,
+    name: "Metis",
+    currency: "METIS",
+    explorerUrl: "https://1088.routescan.io",
+    rpcUrl: "https://andromeda.metis.io",
   },
 };
 

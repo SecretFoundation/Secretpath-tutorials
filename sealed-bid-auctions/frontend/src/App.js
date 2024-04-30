@@ -21,12 +21,14 @@ const ethersConfig = defaultConfig({
 });
 
 createWeb3Modal({
+  chainImages: {
+    1088: "https://cms-cdn.avascan.com/cms2/metis.97de56bab032.svg",
+  },
   ethersConfig,
   chains: [
     testnets.arbitrumTestnet,
     testnets.sepoliaTestnet,
     testnets.scrollTestnet,
-
     testnets.optimismTestnet,
     testnets.baseSepoliaTestnet,
     testnets.berachainTestnet,

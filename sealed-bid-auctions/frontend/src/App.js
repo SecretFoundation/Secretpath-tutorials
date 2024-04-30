@@ -23,18 +23,12 @@ const ethersConfig = defaultConfig({
 createWeb3Modal({
   chainImages: {
     1088: "https://cms-cdn.avascan.com/cms2/metis.97de56bab032.svg",
+    59902: "https://cms-cdn.avascan.com/cms2/metis.97de56bab032.svg",
+    11155111:
+      "https://sepolia.etherscan.io/images/svg/brands/ethereum-original.svg",
   },
   ethersConfig,
   chains: [
-    testnets.arbitrumTestnet,
-    testnets.sepoliaTestnet,
-    testnets.scrollTestnet,
-    testnets.optimismTestnet,
-    testnets.baseSepoliaTestnet,
-    testnets.berachainTestnet,
-    testnets.metisSepoliaTestnet,
-    testnets.lineaSepoliaTestnet,
-    testnets.nearAuroraTestnet,
     mainnets.ethereumMainnet,
     mainnets.polygonMainnet,
     mainnets.binanceSmartChainMainnet,
@@ -44,6 +38,16 @@ createWeb3Modal({
     mainnets.baseMainnet,
     mainnets.scrollMainnet,
     mainnets.lineaMainnet,
+    mainnets.metisMainnet,
+    testnets.arbitrumTestnet,
+    testnets.sepoliaTestnet,
+    testnets.scrollTestnet,
+    testnets.optimismTestnet,
+    testnets.baseSepoliaTestnet,
+    testnets.berachainTestnet,
+    testnets.metisSepoliaTestnet,
+    testnets.lineaSepoliaTestnet,
+    testnets.nearAuroraTestnet,
   ],
   projectId,
   enableAnalytics: true, // Optional - defaults to your Cloud configuration

@@ -43,8 +43,8 @@ let bid_tx = async () => {
   //EVM gateway contract address
   const publicClientAddress = "0x3879E146140b627a5C858a08e507B171D9E43139";
 
-  const routing_contract = process.env.SECRET_CONTRACT_ADDRESS;
-  const routing_code_hash = process.env.SECRET_CONTRACT_CODEHASH;
+  const routing_contract = process.env.SECRET_ADDRESS;
+  const routing_code_hash = process.env.CODE_HASH;
 
   const iface = new ethers.utils.Interface(abi);
   const privateKey = process.env.PRIVATE_KEY;

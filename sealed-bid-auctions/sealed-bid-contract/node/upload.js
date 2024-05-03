@@ -56,7 +56,7 @@ let upload_contract = async () => {
   contractCodeHash = (
     await secretjs.query.compute.codeHashByCodeId({ code_id: codeId })
   ).code_hash;
-  console.log(`Contract hash: ${contractCodeHash}`);
+  console.log(`CODE_HASH: ${contractCodeHash}`);
 };
 
 let instantiate_contract = async () => {
@@ -88,7 +88,7 @@ let instantiate_contract = async () => {
     (log) => log.type === "message" && log.key === "contract_address"
   ).value;
 
-  console.log("contract address: ", contractAddress);
+  console.log("SECRET_ADDRESS: ", contractAddress);
 };
 
 // Chain the execution using promises

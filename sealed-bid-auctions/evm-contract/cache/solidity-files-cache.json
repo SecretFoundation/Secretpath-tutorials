@@ -631,6 +631,38 @@
       "imports": [],
       "versionPragmas": [],
       "artifacts": []
+    },
+    "/Users/sean_conrad/Desktop/Secretpath-tutorials/sealed-bid-auctions/evm-contract/contracts/Auction.sol": {
+      "lastModificationDate": 1714710689645,
+      "contentHash": "d41d8cd98f00b204e9800998ecf8427e",
+      "sourceName": "contracts/Auction.sol",
+      "solcConfig": {
+        "version": "0.8.23",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [],
+      "artifacts": []
     }
   }
 }

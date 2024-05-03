@@ -1,1 +1,1 @@
-# 4.17.24: This is currently in development - SEANRAD
+### See the EVM Sealed Bids Auction tutorial in the docs [here](https://docs.scrt.network/secret-network-documentation/confidential-computing-layer/ethereum-evm-developer-toolkit/usecases/sealed-bid-auction)

@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { createWeb3Modal, defaultConfig } from "@web3modal/ethers5/react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import CreateAuctionItem from "./components/CreateAuctionItem";
+import CreateProposal from "./components/CreateProposal";
 import Navigation from "./components/Navigation";
-import SecretToken from "./components/SecretToken";
-import BidOnAuctionItem from "./components/BidOnAuctionItem";
+import VoteOnProposal from "./components/VoteOnProposal";
 import { projectId, testnets, mainnets, metadata } from "./config/config";
 import MyImage from "./poweredby.png";
 const ethersConfig = defaultConfig({
@@ -114,8 +113,8 @@ function App() {
       <div className="flex min-h-full flex-1 flex-col justify-center px-6  lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <div className="text-white text-xl font-bold mb-10 ml-16">
-            EVM Sealed-bid Auctions
-            <h6 className="text-xs ml-14 hover:underline">
+            Cross-Chain EVM Voting Demo
+            <h6 className="text-xs ml-20 hover:underline">
               <a
                 href="https://docs.scrt.network/secret-network-documentation/confidential-computing-layer/ethereum-evm-developer-toolkit/usecases/vrf/vrf-developer-tutorial"
                 target="_blank"
@@ -129,8 +128,8 @@ function App() {
             <Navigation />
 
             <Routes>
-              <Route path="/create" element={<CreateAuctionItem />} />
-              <Route path="/bid" element={<BidOnAuctionItem />} />
+              <Route path="/create" element={<CreateProposal />} />
+              <Route path="/vote" element={<VoteOnProposal />} />
             </Routes>
           </Router>
           <img

@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { testnet, mainnet } from "../config/secretpath";
+import { testnet, mainnet } from "../config/secretpath.js";
 import React, { useState, useEffect } from "react";
 import {
   arrayify,
@@ -21,7 +21,7 @@ import {
 } from "@blake.regalia/belt";
 import abi from "../config/abi.js";
 
-function CreateAuctionItem() {
+function CreateProposal() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [minutes, setMinutes] = useState("");
@@ -84,7 +84,7 @@ function CreateAuctionItem() {
     );
     const callbackGasLimit = 300000;
 
-    // Create the data object from fsorm state
+    // Create the data object from form state
     const data = JSON.stringify({
       name: name,
       description: description,
@@ -215,7 +215,7 @@ function CreateAuctionItem() {
       user_pubkey: user_pubkey,
       routing_code_hash: routing_code_hash,
       task_destination_network: "pulsar-3",
-      handle: "create_auction_item",
+      handle: "create_proposal",
       nonce: hexlify(nonce),
       payload: hexlify(ciphertext),
       payload_signature: payloadSignature,
@@ -230,7 +230,6 @@ function CreateAuctionItem() {
     ]);
 
     const gasFee = await provider.getGasPrice();
-
     let amountOfGas;
     if (chainId === "4202") {
       amountOfGas = gasFee.mul(callbackGasLimit).mul(100000).div(2);
@@ -263,7 +262,7 @@ function CreateAuctionItem() {
   return (
     <div className="sm:mx-auto sm:w-full sm:max-w-md mb-20">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="text-white">Create Auction Item</div>
+        <div className="text-white">Create Proposal</div>
         <div className="border-4 rounded-lg p-4">
           <div>
             <label className="block text-sm font-medium leading-6 text-white">
@@ -299,7 +298,7 @@ function CreateAuctionItem() {
               type="text"
               value={minutes}
               onChange={(e) => setMinutes(e.target.value)}
-              placeholder="Auction Duration in Minutes"
+              placeholder="Proposal Duration in Minutes"
               required
               className="mt-2 block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-indigo-500 sm:text-sm"
             />
@@ -309,13 +308,13 @@ function CreateAuctionItem() {
           type="submit"
           className="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          Create Auction Item
+          Create Vote Proposal
         </button>
       </form>
       {isModalVisible && (
         <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="p-4 rounded">
-            <h2 className="text-lg">Auction Created Successfully!</h2>
+            <h2 className="text-lg">Proposal Created Successfully!</h2>
 
             <button
               onClick={() => handleCloseModal()}
@@ -324,10 +323,10 @@ function CreateAuctionItem() {
               Close
             </button>
             <a
-              href={`/bid`}
+              href={`/vote`}
               className="ml-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-green-700"
             >
-              View Auction
+              View Proposal
             </a>
           </div>
         </div>
@@ -336,4 +335,4 @@ function CreateAuctionItem() {
   );
 }
 
-export default CreateAuctionItem;
+export default CreateProposal;

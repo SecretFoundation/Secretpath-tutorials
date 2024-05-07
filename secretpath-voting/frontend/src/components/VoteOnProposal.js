@@ -1,5 +1,7 @@
 import { ethers } from "ethers";
-import { testnet, mainnet } from "../config/secretpath";
+import { testnet, mainnet } from "../config/secretpath.js";
+import { SecretNetworkClient } from "secretjs";
+import ClipLoader from "react-spinners/ClipLoader";
 import React, { useState, useEffect } from "react";
 import {
   arrayify,
@@ -21,11 +23,12 @@ import {
 } from "@blake.regalia/belt";
 import abi from "../config/abi.js";
 
-function CreateAuctionItem() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [minutes, setMinutes] = useState("");
+export default function VoteOnProposal({ myAddress, setMyAddress }) {
+  const [items, setItems] = useState([]);
+  const [bids, setVotes] = useState({});
   const [chainId, setChainId] = useState("");
+  const [voteValues, setVoteValues] = useState({});
+  const [loading, setLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
@@ -57,7 +60,23 @@ function CreateAuctionItem() {
     };
   }, []);
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    const fetchItemsAndBids = async () => {
+      const fetchedItems = await queryAllVotes();
+      setItems(fetchedItems);
+      const fetchedVotes = await queryVotesForItems(fetchedItems);
+      setVotes(fetchedVotes);
+    };
+
+    fetchItemsAndBids();
+  }, []);
+
+  const handleVoteChange = (itemKey, value) => {
+    setVotes((prev) => ({ ...prev, [itemKey]: value }));
+    setVoteValues((prev) => ({ ...prev, [itemKey]: value }));
+  };
+
+  const handleSubmit = async (e, itemKey, amount, index) => {
     e.preventDefault();
 
     const iface = new ethers.utils.Interface(abi);
@@ -84,12 +103,23 @@ function CreateAuctionItem() {
     );
     const callbackGasLimit = 300000;
 
-    // Create the data object from fsorm state
+    const myVote = bids[itemKey];
+
+    console.log(
+      `Submitting vote of ${myVote} for item ${
+        items.find((x) => x.key === itemKey).name
+      }`
+    );
+
+    // let updatedIndex = itemKey - 1;
+    // Create the data object from form state
     const data = JSON.stringify({
-      name: name,
-      description: description,
-      end_time: minutes,
+      vote: myVote,
+      bidder_address: myAddress,
+      index: itemKey.toString(),
     });
+
+    console.log(data);
 
     let publicClientAddress;
 
@@ -215,7 +245,7 @@ function CreateAuctionItem() {
       user_pubkey: user_pubkey,
       routing_code_hash: routing_code_hash,
       task_destination_network: "pulsar-3",
-      handle: "create_auction_item",
+      handle: "create_vote",
       nonce: hexlify(nonce),
       payload: hexlify(ciphertext),
       payload_signature: payloadSignature,
@@ -229,13 +259,13 @@ function CreateAuctionItem() {
       _info,
     ]);
 
-    const gasFee = await provider.getGasPrice();
 
-    let amountOfGas;
+    const gasFee = await provider.getGasPrice()
+    let amountOfGas
     if (chainId === "4202") {
-      amountOfGas = gasFee.mul(callbackGasLimit).mul(100000).div(2);
+      amountOfGas = gasFee.mul(callbackGasLimit).mul(100000).div(2)
     } else {
-      amountOfGas = gasFee.mul(callbackGasLimit).mul(3).div(2);
+      amountOfGas = gasFee.mul(callbackGasLimit).mul(3).div(2)
     }
 
     const tx_params = {
@@ -260,62 +290,137 @@ function CreateAuctionItem() {
     setIsModalVisible(false); // Function to close modal
   };
 
+  useEffect(() => {
+    const fetchItemsAndVotes = async () => {
+      const fetchedItems = await queryAllVotes(); // Fetch all auction items first
+      setItems(fetchedItems);
+      const fetchedVotes = await queryVotesForItems(fetchedItems); // Fetch bids based on the fetched items
+      setVotes(fetchedVotes);
+      setLoading(false);
+    };
+
+    fetchItemsAndVotes();
+  }, []);
+
+  const queryAllVotes = async () => {
+    const secretjs = new SecretNetworkClient({
+      url: "https://lcd.testnet.secretsaturn.net",
+      chainId: "pulsar-3",
+    });
+
+    let items = [];
+    let key = 1;
+    let continueFetching = true;
+
+    while (continueFetching) {
+      try {
+        const response = await secretjs.query.compute.queryContract({
+          contract_address: process.env.REACT_APP_SECRET_ADDRESS,
+          code_hash: process.env.REACT_APP_CODE_HASH,
+          query: { retrieve_proposal: { key } },
+        });
+
+        if (response && response !== "Generic error: Value not found") {
+          items.push({ key, ...response });
+          key++;
+        } else {
+          continueFetching = false;
+        }
+      } catch (error) {
+        console.error(`Failed to fetch item with key ${key}:`, error);
+        continueFetching = false;
+      }
+    }
+
+    return items;
+  };
+
+  const queryVotesForItems = async (items) => {
+    const secretjs = new SecretNetworkClient({
+      url: "https://lcd.testnet.secretsaturn.net",
+      chainId: "pulsar-3",
+    });
+
+    let votes = [];
+    for (let item of items) {
+      try {
+        const query_tx = await secretjs.query.compute.queryContract({
+          contract_address: process.env.REACT_APP_SECRET_ADDRESS,
+          code_hash: process.env.REACT_APP_CODE_HASH,
+          query: { retrieve_votes: { key: item.key } },
+        });
+
+        if (query_tx && query_tx.message) {
+          votes.push(query_tx.message);
+        } else {
+          votes.push("No votes available for this item");
+        }
+      } catch (error) {
+        console.error(
+          `Failed to query votes for item with key ${item.key}:`,
+          error
+        );
+        votes.push("Error fetching votes");
+      }
+    }
+    console.log(votes);
+    return votes;
+  };
+
+  if (loading) {
+    return (
+      <ClipLoader
+        color="#ffffff"
+        loading={loading}
+        size={150}
+        className="flex justify-center items-center h-screen ml-32"
+      />
+    );
+  }
+
   return (
-    <div className="sm:mx-auto sm:w-full sm:max-w-md mb-20">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="text-white">Create Auction Item</div>
-        <div className="border-4 rounded-lg p-4">
-          <div>
-            <label className="block text-sm font-medium leading-6 text-white">
-              Name
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Item Name"
-              required
-              className="mt-2 block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div className="mt-4">
-            <label className="block text-sm font-medium leading-6 text-white">
-              Description
-            </label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Item Description"
-              required
-              className="mt-2 block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-indigo-500 sm:text-sm"
-              rows="4"
-            ></textarea>
-          </div>
-          <div className="mt-4">
-            <label className="block text-sm font-medium leading-6 text-white">
-              Minutes
-            </label>
-            <input
-              type="text"
-              value={minutes}
-              onChange={(e) => setMinutes(e.target.value)}
-              placeholder="Auction Duration in Minutes"
-              required
-              className="mt-2 block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-indigo-500 sm:text-sm"
-            />
-          </div>
-        </div>
-        <button
-          type="submit"
-          className="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Create Auction Item
-        </button>
-      </form>
+    <div className="sm:mx-auto sm:w-full sm:max-w-md text-white">
+      <h1 className="text-xl font-bold ml-6">Proposals</h1>
+
+      {[...items].reverse().map(
+        (
+          item,
+          index // Reverse the copy of items for rendering
+        ) => (
+          <form
+            key={item.key}
+            onSubmit={(e) => handleSubmit(e, item.key)}
+            className="border-4 rounded-lg p-4 m-4"
+          >
+            <h3 className="text-2xl font-semibold">{item.name}</h3>
+            <p className="text-base italic">{item.description}</p>
+            <p>{bids[items.length - 1 - index]}</p>
+            {bids.length > 0 &&
+            (bids[items.length - 1 - index].includes("wins") ||
+              bids[items.length - 1 - index].includes("Tie!")) ? null : (
+              <>
+                <input
+                  type="text"
+                  value={voteValues[item.key] || ""}
+                  onChange={(e) => handleVoteChange(item.key, e.target.value)}
+                  placeholder="Enter your vote"
+                  className="text-black"
+                />
+                <button
+                  type="submit"
+                  className="mt-4 max-w-[400px] flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Vote
+                </button>
+              </>
+            )}
+          </form>
+        )
+      )}
       {isModalVisible && (
         <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="p-4 rounded">
-            <h2 className="text-lg">Auction Created Successfully!</h2>
+            <h2 className="text-lg">Bid Created Successfully!</h2>
 
             <button
               onClick={() => handleCloseModal()}
@@ -323,17 +428,9 @@ function CreateAuctionItem() {
             >
               Close
             </button>
-            <a
-              href={`/bid`}
-              className="ml-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-green-700"
-            >
-              View Auction
-            </a>
           </div>
         </div>
       )}
     </div>
   );
 }
-
-export default CreateAuctionItem;

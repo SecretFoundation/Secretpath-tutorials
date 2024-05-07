@@ -120,7 +120,6 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
     });
 
     let publicClientAddress;
-
     if (chainId === "1") {
       publicClientAddress = mainnet.publicClientAddressEthereumMainnet;
     }
@@ -142,11 +141,17 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
     if (chainId === "8453") {
       publicClientAddress = mainnet.publicClientAddressBaseMainnet;
     }
+
+    if (chainId === "59144") {
+      publicClientAddress = mainnet.publicClientAddressLineaMainnet;
+    }
+
     if (chainId === "534352") {
       publicClientAddress = mainnet.publicClientAddressScrollMainnet;
     }
-    if (chainId === "59144") {
-      publicClientAddress = mainnet.publicClientAddressLineaMainnet;
+
+    if (chainId === "1088") {
+      publicClientAddress = mainnet.publicClientAddressMetisMainnet;
     }
 
     if (chainId === "11155111") {
@@ -167,8 +172,13 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
     if (chainId === "84532") {
       publicClientAddress = testnet.publicClientAddressBaseSepoliaTestnet;
     }
+
     if (chainId === "80085") {
       publicClientAddress = testnet.publicClientAddressBerachainTestnet;
+    }
+
+    if (chainId === "128123") {
+      publicClientAddress = testnet.publicClientAddressEtherlinkTestnet;
     }
     if (chainId === "59902") {
       publicClientAddress = testnet.publicClientAddressMetisSepoliaTestnet;
@@ -179,9 +189,11 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
     if (chainId === "59141") {
       publicClientAddress = testnet.publicClientAddressLineaSepoliaTestnet;
     }
-
-    if (chainId === "128123") {
-      publicClientAddress = testnet.publicClientAddressEtherlinkTestnet;
+    if (chainId === "51") {
+      publicClientAddress = testnet.publicClientAddressXDCApothemTestnet;
+    }
+    if (chainId === "4202") {
+      publicClientAddress = testnet.publicClientAddressLiskSepoliaTestnet;
     }
 
     const callbackAddress = publicClientAddress.toLowerCase();
@@ -245,7 +257,12 @@ export default function BidOnAuctionItem({ myAddress, setMyAddress }) {
     ]);
 
     const gasFee = await provider.getGasPrice();
-    const amountOfGas = gasFee.mul(callbackGasLimit).mul(3).div(2);
+    let amountOfGas;
+    if (chainId === "4202") {
+      amountOfGas = gasFee.mul(callbackGasLimit).mul(100000).div(2);
+    } else {
+      amountOfGas = gasFee.mul(callbackGasLimit).mul(3).div(2);
+    }
 
     const tx_params = {
       gas: hexlify(150000),

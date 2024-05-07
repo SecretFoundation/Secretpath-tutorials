@@ -1,7 +1,8 @@
-// Export Project ID
+// config.js
+
+// 1. Export Project ID
 export const projectId = "6e58f7c259de8fd44a4b237465fe9956";
 
-// Mainnet configurations
 export const mainnets = {
   ethereumMainnet: {
     chainId: 1,
@@ -73,7 +74,7 @@ export const mainnets = {
     explorerUrl: "https://1088.routescan.io",
     rpcUrl: "https://andromeda.metis.io",
   },
-};
+}
 // Testnet configurations
 export const testnets = {
   sepoliaTestnet: {
@@ -167,7 +168,7 @@ export const testnets = {
     explorerUrl: "https://sepolia-blockscout.lisk.com",
     rpcUrl: "https://rpc.lisk-sepolia-testnet.gelato.digital",
   },
-};
+}
 
 // 4. Metadata Object
 export const metadata = {

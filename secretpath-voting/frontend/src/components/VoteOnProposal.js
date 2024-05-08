@@ -259,13 +259,12 @@ export default function VoteOnProposal({ myAddress, setMyAddress }) {
       _info,
     ]);
 
-
-    const gasFee = await provider.getGasPrice()
-    let amountOfGas
+    const gasFee = await provider.getGasPrice();
+    let amountOfGas;
     if (chainId === "4202") {
-      amountOfGas = gasFee.mul(callbackGasLimit).mul(100000).div(2)
+      amountOfGas = gasFee.mul(callbackGasLimit).mul(100000).div(2);
     } else {
-      amountOfGas = gasFee.mul(callbackGasLimit).mul(3).div(2)
+      amountOfGas = gasFee.mul(callbackGasLimit).mul(3).div(2);
     }
 
     const tx_params = {
@@ -369,18 +368,15 @@ export default function VoteOnProposal({ myAddress, setMyAddress }) {
 
   if (loading) {
     return (
-      <ClipLoader
-        color="#ffffff"
-        loading={loading}
-        size={150}
-        className="flex justify-center items-center h-screen ml-32"
-      />
+      <div className="flex justify-center items-center ">
+        <ClipLoader color="#ffffff" loading={loading} size={150} />
+      </div>
     );
   }
 
   return (
     <div className="sm:mx-auto sm:w-full sm:max-w-md text-white">
-      <h1 className="text-xl font-bold ml-6">Proposals</h1>
+      <h1 className="text-xl font-bold">Proposals</h1>
 
       {[...items].reverse().map(
         (
@@ -395,25 +391,27 @@ export default function VoteOnProposal({ myAddress, setMyAddress }) {
             <h3 className="text-2xl font-semibold">{item.name}</h3>
             <p className="text-base italic">{item.description}</p>
             <p>{bids[items.length - 1 - index]}</p>
-            {bids.length > 0 &&
-            (bids[items.length - 1 - index].includes("wins") ||
-              bids[items.length - 1 - index].includes("Tie!")) ? null : (
+            {/* Check each proposal's status individually before rendering the vote interface */}
+            {!bids[items.length - 1 - index].includes("wins") &&
+            !bids[items.length - 1 - index].includes("Tie!") ? (
               <>
-                <input
-                  type="text"
+                <select
                   value={voteValues[item.key] || ""}
                   onChange={(e) => handleVoteChange(item.key, e.target.value)}
-                  placeholder="Enter your vote"
-                  className="text-black"
-                />
+                  className="text-black bg-white rounded-md p-2 min-w-[200px]"
+                >
+                  <option value="">Select your vote</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
                 <button
                   type="submit"
-                  className="mt-4 max-w-[400px] flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="mt-4 min-w-[200px] flex justify-center mx-auto py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   Vote
                 </button>
               </>
-            )}
+            ) : null}
           </form>
         )
       )}
@@ -421,7 +419,6 @@ export default function VoteOnProposal({ myAddress, setMyAddress }) {
         <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="p-4 rounded">
             <h2 className="text-lg">Bid Created Successfully!</h2>
-
             <button
               onClick={() => handleCloseModal()}
               className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-blue-700"

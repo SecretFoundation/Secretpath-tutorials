@@ -265,12 +265,12 @@ fn retrieve_votes_query(env: Env, deps: Deps, key: u32) -> StdResult<Binary> {
 
         // Determine the result based on vote counts
         let message = if yes_votes > no_votes {
-            format!("Yes wins! There were {} yes votes.", yes_votes)
+            format!("Yes wins! Total yes votes: {}", yes_votes)
         } else if no_votes > yes_votes {
-            format!("No wins! There were {} no votes.", no_votes)
+            format!("No wins! Total no votes: {} ", no_votes)
         } else {
             format!(
-                "Tie! There were {} no votes and {} yes votes.",
+                "Tie! Total no votes: {}. Total yes votes: {}.",
                 no_votes, yes_votes
             )
         };
@@ -282,7 +282,6 @@ fn retrieve_votes_query(env: Env, deps: Deps, key: u32) -> StdResult<Binary> {
         })
     }
 }
-
 
 fn calculate_future_block_height(current_block_height: u64, minutes_into_future: u64) -> u64 {
     let average_block_time_seconds = 6; // Rounded average block time in seconds for simplification

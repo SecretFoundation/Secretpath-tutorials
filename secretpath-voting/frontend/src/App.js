@@ -108,15 +108,15 @@ createWeb3Modal({
 
 function App() {
   return (
-    <div className="mt-4">
+    <div className="mt-4 ml-4">
       <w3m-button />
       <div className="flex min-h-full flex-1 flex-col justify-center px-6  lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <div className="text-white text-xl font-bold mb-10 ml-16">
+        <div className="flex flex-col items-center justify-center text-center mt-4 ml-4">
+          <div className="text-white text-xl font-bold mb-10">
             Cross-Chain EVM Voting Demo
-            <h6 className="text-xs ml-20 hover:underline">
+            <h6 className=" text-xs hover:underline">
               <a
-                href="https://docs.scrt.network/secret-network-documentation/confidential-computing-layer/ethereum-evm-developer-toolkit/usecases/vrf/vrf-developer-tutorial"
+                href="https://docs.scrt.network/secret-network-documentation/confidential-computing-layer/ethereum-evm-developer-toolkit/usecases/confidential-voting/confidential-voting-developer-tutorial-with-secretpath"
                 target="_blank"
               >
                 [click here for docs]
@@ -135,7 +135,7 @@ function App() {
           <img
             src={MyImage}
             alt="Descriptive Text"
-            className=" w-18 h-12 rounded-lg shadow-lg mt-8 ml-36"
+            className="mx-auto w-18 h-12 rounded-lg shadow-lg mt-8"
           />
         </div>
       </div>

@@ -168,7 +168,7 @@ fn create_vote(
 
     let storage_vote = Vote {
         vote: input.vote,
-        bidder_address: input.bidder_address,
+        wallet_address: input.wallet_address,
         index: index,
     };
 

@@ -25,7 +25,7 @@ pub struct Proposal {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct Vote {
     pub vote: String,
-    pub bidder_address: String,
+    pub wallet_address: String,
     pub index: u32,
 }
 

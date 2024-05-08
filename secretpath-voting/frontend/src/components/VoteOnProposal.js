@@ -115,7 +115,7 @@ export default function VoteOnProposal({ myAddress, setMyAddress }) {
     // Create the data object from form state
     const data = JSON.stringify({
       vote: myVote,
-      bidder_address: myAddress,
+      wallet_address: myAddress,
       index: itemKey.toString(),
     });
 

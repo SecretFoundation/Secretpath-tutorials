@@ -62,7 +62,7 @@ export default function VoteOnProposal({ myAddress, setMyAddress }) {
 
   useEffect(() => {
     const fetchItemsAndBids = async () => {
-      const fetchedItems = await queryAllVotes();
+      const fetchedItems = await queryAllProposals();
       setItems(fetchedItems);
       const fetchedVotes = await queryVotesForItems(fetchedItems);
       setVotes(fetchedVotes);
@@ -291,9 +291,9 @@ export default function VoteOnProposal({ myAddress, setMyAddress }) {
 
   useEffect(() => {
     const fetchItemsAndVotes = async () => {
-      const fetchedItems = await queryAllVotes(); // Fetch all auction items first
+      const fetchedItems = await queryAllProposals(); // Fetch all proposals first
       setItems(fetchedItems);
-      const fetchedVotes = await queryVotesForItems(fetchedItems); // Fetch bids based on the fetched items
+      const fetchedVotes = await queryVotesForItems(fetchedItems); // Fetch votes based on the fetched items
       setVotes(fetchedVotes);
       setLoading(false);
     };
@@ -301,7 +301,7 @@ export default function VoteOnProposal({ myAddress, setMyAddress }) {
     fetchItemsAndVotes();
   }, []);
 
-  const queryAllVotes = async () => {
+  const queryAllProposals = async () => {
     const secretjs = new SecretNetworkClient({
       url: "https://lcd.testnet.secretsaturn.net",
       chainId: "pulsar-3",
@@ -418,7 +418,7 @@ export default function VoteOnProposal({ myAddress, setMyAddress }) {
       {isModalVisible && (
         <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="p-4 rounded">
-            <h2 className="text-lg">Bid Created Successfully!</h2>
+            <h2 className="text-lg">Vote Created Successfully!</h2>
             <button
               onClick={() => handleCloseModal()}
               className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-blue-700"

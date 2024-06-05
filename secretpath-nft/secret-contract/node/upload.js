@@ -17,7 +17,7 @@ const gatewayPublicKeyBytes = Buffer.from(gatewayPublicKey.substring(2), "hex").
 
 const secretjs = new SecretNetworkClient({
   chainId: "pulsar-3",
-  url: "https://api.pulsar3.scrttestnet.com",
+  url: "https://lcd.testnet.secretsaturn.net",
   wallet: wallet,
   walletAddress: wallet.address,
 })

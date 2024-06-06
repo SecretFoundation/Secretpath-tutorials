@@ -59,7 +59,7 @@ export default function CreateNFT() {
         }
         await (window).ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0xAA36A7' }], // chainId must be in hexadecimal numbers
+          params: [{ chainId:process.env.REACT_APP_CHAIN_ID }], // chainId must be in hexadecimal numbers
       });
         await window.ethereum.request({ method: 'eth_requestAccounts' });
         const provider = new ethers.providers.Web3Provider(window.ethereum);

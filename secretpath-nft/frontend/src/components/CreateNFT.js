@@ -43,7 +43,7 @@ export default function CreateNFT() {
   const [buttonDisabled, setButtonDisabled] = useState(false); 
 
   const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS; 
-  const JWT = `Bearer ${process.env.REACT_APP_PINATA}`;
+  const JWT = `Bearer ${process.env.REACT_APP_PINATA_JWT}`;
 
   const openai = new OpenAI({
     apiKey: process.env.REACT_APP_OPENAI_API_KEY,
